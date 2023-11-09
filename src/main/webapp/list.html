@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Thêm mới</h1>
+<form action="/TodoServlet" method="post">
+    <textarea placeholder="nội dung công việc" name="task"></textarea>
+    <select name="status">
+        <option value="true">Hoàn thành</option>
+        <option value="false" selected>Chưa hoàn thành</option>
+    </select>
+    <input type="submit" value="ADD" name="action">
+</form>
+</body>
+</html>
