@@ -39,6 +39,12 @@ public class TodoServlet extends HttpServlet {
                 case "ADD":
                     addTodo(response);
                     break;
+                case "EDIT":
+                    int idEdit = Integer.parseInt(request.getParameter("id"));
+
+                    Todo todo = todoService.findById(idEdit);
+                    editTodo(response,todo);
+                    break;
 
 
             }
@@ -105,6 +111,30 @@ public class TodoServlet extends HttpServlet {
                 "</html>");
     }
 
+    protected void editTodo(HttpServletResponse response, Todo todoEdit) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <title>Title</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<h1>Thêm mới</h1>\n" +
+                "<form action=\"/TodoServlet\" method=\"post\">\n" +
+                    "<input type=\"text\" value=\""+todoEdit.getId()+"\" readonly name=\"id\">"+
+                "    <textarea placeholder=\"nội dung công việc\" name=\"task\">"+todoEdit.getTask()+"</textarea>\n" +
+                "    <select name=\"status\">\n" +
+                "        <option value=\"true\" "+(todoEdit.isStatus()?"selected":"")+">Hoàn thành</option>\n" +
+                "        <option value=\"false\""+(!todoEdit.isStatus()?"selected":"")+">Chưa hoàn thành</option>\n" +
+                "    </select>\n" +
+                "    <input type=\"submit\" value=\"UPDATE\" name=\"action\">\n" +
+                "</form>\n" +
+                "</body>\n" +
+                "</html>");
+    }
+
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
@@ -117,6 +147,14 @@ public class TodoServlet extends HttpServlet {
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
                     Todo newTodo= new Todo(todoService.getNewId(),task,status);
                     todoService.save(newTodo);
+                    showListTodo(response);
+                    break;
+                case "UPDATE":
+                    int idEdit = Integer.parseInt(request.getParameter("id"));
+                    String taskUp = request.getParameter("task");
+                    boolean statusUp = Boolean.parseBoolean(request.getParameter("status"));
+                    Todo todoUpdate= new Todo(idEdit,taskUp,statusUp);
+                    todoService.save(todoUpdate);
                     showListTodo(response);
                     break;
             }
